@@ -1,14 +1,15 @@
 import matplotlib as mplb
 import matplotlib.pylab as pylab
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import seaborn as sns
+import xgi
 from scipy.integrate import solve_ivp
 from scipy.stats import gamma, multivariate_normal
-import networkx as nx
-import xgi
 
-def create_comm(rho,me=1.5,md=1.5,vare=1,vard=1,samplesize = None):
+
+def create_comm(rho, me=1.5, md=1.5, vare=1, vard=1, samplesize=None):
     """
     Docstring for create_comm
 
@@ -40,7 +41,7 @@ def create_comm(rho,me=1.5,md=1.5,vare=1,vard=1,samplesize = None):
 
     joint_dist = rv.pdf(pos)
     if samplesize:
-        samples = rv.rvs(size=samplesize*5)
+        samples = rv.rvs(size=samplesize * 5)
         in_bounds = np.all((samples >= x[0]) & (samples <= x[-1]), axis=1)
         final_samples = samples[in_bounds]
         return joint_dist / np.sum(joint_dist), final_samples[:samplesize]
@@ -48,30 +49,36 @@ def create_comm(rho,me=1.5,md=1.5,vare=1,vard=1,samplesize = None):
 
 
 def BC_r0(a, b, beta, gamma, k, e):
-    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e)**2
+    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e) ** 2
     l = (1 + e) * (a + b) / 4 + np.sqrt(max(err, 0)) / 4
     return beta * k * l / gamma
 
+
 def BC_beta(a, b, R0, gamma, k, e):
-    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e)**2
+    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e) ** 2
     l = (1 + e) * (a + b) / 4 + np.sqrt(max(err, 0)) / 4
     return (R0 * gamma) / (k * l)
 
+
 def IBC_r0(a, b, beta, gamma, k, e, r):
-    alpha = (1 - (r**2 + (1-r)**2)) / (r**2 + (1-r)**2)
-    err = ((1 + alpha * e) * (r * a - (1-r) * b))**2 + (4 * r * (1-r) * a * b * (1-e)**2)
-    l = ((1 + alpha * e) * (r * a + (1-r) * b)) / 2 + np.sqrt(max(err, 0)) / 2
+    alpha = (1 - (r**2 + (1 - r) ** 2)) / (r**2 + (1 - r) ** 2)
+    err = ((1 + alpha * e) * (r * a - (1 - r) * b)) ** 2 + (
+        4 * r * (1 - r) * a * b * (1 - e) ** 2
+    )
+    l = ((1 + alpha * e) * (r * a + (1 - r) * b)) / 2 + np.sqrt(max(err, 0)) / 2
     return beta * k * l / gamma
 
+
 def IBC_beta(a, b, R0, gamma, k, e, r):
-    x = k * (1 + ((1 - r**2 - (1-r)**2) / (r**2 + (1-r)**2))*e)
+    x = k * (1 + ((1 - r**2 - (1 - r) ** 2) / (r**2 + (1 - r) ** 2)) * e)
     y = k * (1 - e)
     # err = (c11 * (a + b))**2 - 4*a*b*(c11**2 - c12**2)
     # l = c11 * (a + b) / 2 + np.sqrt(max(err, 0)) / 2
-    err = (r*x*a + (1-r)*x*b)**2 - 4*(r*(1-r)*a*b*(x**2-y**2))
-    #l = (r*x*a + (1-r)*x*b) / 2 + np.sqrt(max(err, 0)) / 2
-    l = (r*x*a + (1-r)*x*b) / 2 + np.sqrt(max(err, 0)) / 2
-    return (R0*gamma)/l
+    err = (r * x * a + (1 - r) * x * b) ** 2 - 4 * (r * (1 - r) * a * b * (x**2 - y**2))
+    # l = (r*x*a + (1-r)*x*b) / 2 + np.sqrt(max(err, 0)) / 2
+    l = (r * x * a + (1 - r) * x * b) / 2 + np.sqrt(max(err, 0)) / 2
+    return (R0 * gamma) / l
+
 
 def g0(a, b, beta, r0, k, e):
     c11 = (beta * k * (1 + e)) / 2
@@ -82,6 +89,7 @@ def g0(a, b, beta, r0, k, e):
     l = c11 * (a + b) / 2 + np.sqrt(max(err, 0)) / 2
     return l / r0
 
+
 def plot_comm(joint_dist, x, y):
     ax = sns.heatmap(joint_dist, xticklabels=9, yticklabels=9)
     ax.set(xlabel="susceptibility", ylabel="transmisibility")
@@ -89,6 +97,7 @@ def plot_comm(joint_dist, x, y):
     ax.set_yticklabels(np.round([y[i] for i in range(0, 100, 9)], 2), rotation=0)
     ax.xaxis.tick_top()
     plt.show()
+
 
 def simple_network_model(P, T, dt):
 
@@ -274,6 +283,7 @@ def basic_SIR(P, T, dt, R0):
 
     return [S, I, R, incident_inf]
 
+
 def sbm(n, k, epsilon, seed=None):
     """
     Generates a Stochastic Block Model (SBM) graph.
@@ -308,71 +318,80 @@ def sbm(n, k, epsilon, seed=None):
     return nx.adjacency_matrix(G).todense()
 
 
-    
-def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
+def hierarchy_pos(G, root=None, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5):
+    """
+    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.
+    Licensed under Creative Commons Attribution-Share Alike
 
-    '''
-    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.  
-    Licensed under Creative Commons Attribution-Share Alike 
-    
-    If the graph is a tree this will return the positions to plot this in a 
+    If the graph is a tree this will return the positions to plot this in a
     hierarchical layout.
-    
+
     G: the graph (must be a tree)
-    
-    root: the root node of current branch 
-    - if the tree is directed and this is not given, 
+
+    root: the root node of current branch
+    - if the tree is directed and this is not given,
       the root will be found and used
-    - if the tree is directed and this is given, then 
+    - if the tree is directed and this is given, then
       the positions will be just for the descendants of this node.
-    - if the tree is undirected and not given, 
+    - if the tree is undirected and not given,
       then a random choice will be used.
-    
+
     width: horizontal space allocated for this branch - avoids overlap with other branches
-    
+
     vert_gap: gap between levels of hierarchy
-    
+
     vert_loc: vertical location of root
-    
+
     xcenter: horizontal location of root
-    '''
+    """
     if not nx.is_tree(G):
-        raise TypeError('cannot use hierarchy_pos on a graph that is not a tree')
+        raise TypeError("cannot use hierarchy_pos on a graph that is not a tree")
 
     if root is None:
         if isinstance(G, nx.DiGraph):
-            root = next(iter(nx.topological_sort(G)))  #allows back compatibility with nx version 1.11
+            root = next(
+                iter(nx.topological_sort(G))
+            )  # allows back compatibility with nx version 1.11
         else:
             root = random.choice(list(G.nodes))
 
-    def _hierarchy_pos(G, root, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5, pos = None, parent = None):
-        '''
+    def _hierarchy_pos(
+        G, root, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5, pos=None, parent=None
+    ):
+        """
         see hierarchy_pos docstring for most arguments
 
         pos: a dict saying where all nodes go if they have been assigned
         parent: parent of this branch. - only affects it if non-directed
 
-        '''
-    
+        """
+
         if pos is None:
-            pos = {root:(xcenter,vert_loc)}
+            pos = {root: (xcenter, vert_loc)}
         else:
             pos[root] = (xcenter, vert_loc)
         children = list(G.neighbors(root))
         if not isinstance(G, nx.DiGraph) and parent is not None:
-            children.remove(parent)  
-        if len(children)!=0:
-            dx = width/len(children) 
-            nextx = xcenter - width/2 - dx/2
+            children.remove(parent)
+        if len(children) != 0:
+            dx = width / len(children)
+            nextx = xcenter - width / 2 - dx / 2
             for child in children:
                 nextx += dx
-                pos = _hierarchy_pos(G,child, width = dx, vert_gap = vert_gap, 
-                                    vert_loc = vert_loc-vert_gap, xcenter=nextx,
-                                    pos=pos, parent = root)
+                pos = _hierarchy_pos(
+                    G,
+                    child,
+                    width=dx,
+                    vert_gap=vert_gap,
+                    vert_loc=vert_loc - vert_gap,
+                    xcenter=nextx,
+                    pos=pos,
+                    parent=root,
+                )
         return pos
 
-            
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
+
 
 def uniform_HPPM(n, m, k, epsilon, rho=0.5, seed=None):
     r"""Construct the m-uniform hypergraph planted partition model (m-HPPM)
