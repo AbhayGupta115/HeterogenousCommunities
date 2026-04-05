@@ -1,106 +1,8 @@
-import matplotlib as mplb
-import matplotlib.pylab as pylab
-import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import seaborn as sns
-import xgi
-from scipy.integrate import solve_ivp
-from scipy.stats import gamma, multivariate_normal
-
-
-def create_comm(rho, me=1.5, md=1.5, vare=1, vard=1, samplesize=None):
-    """
-    Docstring for create_comm
-
-    :param rho: Description
-    """
-    x = np.linspace(0.1, 3, 100)
-    y = np.linspace(0.1, 3, 100)
-
-    X, Y = np.meshgrid(x, y)
-
-    mean_x = me
-    mean_y = md
-
-    std_x = vare**0.5
-    std_y = vard**0.5
-
-    cov_xy = rho * std_x * std_y
-
-    # 3D matrix with each slice being X and Y, so all the combos
-    pos = np.empty(X.shape + (2,))
-    pos[:, :, 0] = X
-    pos[:, :, 1] = Y
-
-    # Defining the mean and cov matrix for our multivariate
-    mean = [mean_x, mean_y]
-    covariance_matrix = [[std_x**2, cov_xy], [cov_xy, std_y**2]]
-
-    rv = multivariate_normal(mean=mean, cov=covariance_matrix, allow_singular=True)
-
-    joint_dist = rv.pdf(pos)
-    if samplesize:
-        samples = rv.rvs(size=samplesize * 5)
-        in_bounds = np.all((samples >= x[0]) & (samples <= x[-1]), axis=1)
-        final_samples = samples[in_bounds]
-        return joint_dist / np.sum(joint_dist), final_samples[:samplesize]
-    return joint_dist / np.sum(joint_dist)
-
-
-def BC_r0(a, b, beta, gamma, k, e):
-    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e) ** 2
-    l = (1 + e) * (a + b) / 4 + np.sqrt(max(err, 0)) / 4
-    return beta * k * l / gamma
-
-
-def BC_beta(a, b, R0, gamma, k, e):
-    err = ((1 + e) * (a - b)) ** 2 + 4 * a * b * (1 - e) ** 2
-    l = (1 + e) * (a + b) / 4 + np.sqrt(max(err, 0)) / 4
-    return (R0 * gamma) / (k * l)
-
-
-def IBC_r0(a, b, beta, gamma, k, e, r):
-    alpha = (1 - (r**2 + (1 - r) ** 2)) / (r**2 + (1 - r) ** 2)
-    err = ((1 + alpha * e) * (r * a - (1 - r) * b)) ** 2 + (
-        4 * r * (1 - r) * a * b * (1 - e) ** 2
-    )
-    l = ((1 + alpha * e) * (r * a + (1 - r) * b)) / 2 + np.sqrt(max(err, 0)) / 2
-    return beta * k * l / gamma
-
-
-def IBC_beta(a, b, R0, gamma, k, e, r):
-    x = k * (1 + ((1 - r**2 - (1 - r) ** 2) / (r**2 + (1 - r) ** 2)) * e)
-    y = k * (1 - e)
-    # err = (c11 * (a + b))**2 - 4*a*b*(c11**2 - c12**2)
-    # l = c11 * (a + b) / 2 + np.sqrt(max(err, 0)) / 2
-    err = (r * x * a + (1 - r) * x * b) ** 2 - 4 * (r * (1 - r) * a * b * (x**2 - y**2))
-    # l = (r*x*a + (1-r)*x*b) / 2 + np.sqrt(max(err, 0)) / 2
-    l = (r * x * a + (1 - r) * x * b) / 2 + np.sqrt(max(err, 0)) / 2
-    return (R0 * gamma) / l
-
-
-def g0(a, b, beta, r0, k, e):
-    c11 = (beta * k * (1 + e)) / 2
-    c12 = (beta * k * (1 - e)) / 2
-    # err = (c11 * (a + b))**2 - 4*a*b*(c11**2 - c12**2)
-    # l = c11 * (a + b) / 2 + np.sqrt(max(err, 0)) / 2
-    err = (c11 * (a - b)) ** 2 + 4 * a * b * c12**2
-    l = c11 * (a + b) / 2 + np.sqrt(max(err, 0)) / 2
-    return l / r0
-
-
-def plot_comm(joint_dist, x, y):
-    ax = sns.heatmap(joint_dist, xticklabels=9, yticklabels=9)
-    ax.set(xlabel="susceptibility", ylabel="transmisibility")
-    ax.set_xticklabels(np.round([x[i] for i in range(0, 100, 9)], 2), rotation=90)
-    ax.set_yticklabels(np.round([y[i] for i in range(0, 100, 9)], 2), rotation=0)
-    ax.xaxis.tick_top()
-    plt.show()
-
+import random
 
 def simple_network_model(P, T, dt):
-
     del_range = P["del"].copy()
     eps_range = P["eps"].copy()
 
@@ -132,8 +34,6 @@ def simple_network_model(P, T, dt):
 
     for i in range(num_steps - 1):
         del_1 = np.sum(Y * I[i] * P["G"])
-
-        # del_ls.append([del_1, del_2])
 
         S[i + 1] = S[i] + dt * (-P["beta"] * X * S[i] * P["k"] * del_1)
         I[i + 1] = I[i] + dt * (
@@ -284,40 +184,6 @@ def basic_SIR(P, T, dt, R0):
     return [S, I, R, incident_inf]
 
 
-def sbm(n, k, epsilon, seed=None):
-    """
-    Generates a Stochastic Block Model (SBM) graph.
-
-    Parameters
-    ----------
-    n : int
-        The number of nodes in the graph.
-    k : int
-        The average degree of each node.
-    epsilon : float
-        The parameter controlling the ratio of inter- to intra-community edges.
-    seed : int, optional
-        The seed for the random number generator. Defaults to None.
-
-    Returns
-    -------
-    numpy.ndarray
-        The adjacency matrix of the generated SBM graph.
-
-    Raises
-    ------
-    None
-
-    """
-    p = k / (n - 1)
-    # ratio of inter- to intra-community edges
-    p_in = (1 + epsilon) * p
-    p_out = (1 - epsilon) * p
-    G = nx.planted_partition_graph(2, int(n / 2), p_in, p_out, seed=seed)
-    G.add_nodes_from(range(n))
-    return nx.adjacency_matrix(G).todense()
-
-
 def hierarchy_pos(G, root=None, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5):
     """
     From Joel's answer at https://stackoverflow.com/a/29597209/2966723.
@@ -391,81 +257,3 @@ def hierarchy_pos(G, root=None, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5
         return pos
 
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
-
-
-def uniform_HPPM(n, m, k, epsilon, rho=0.5, seed=None):
-    r"""Construct the m-uniform hypergraph planted partition model (m-HPPM)
-
-    This uses a fast method for generating hyperedges
-    so that instead of the algorithm being of complexity
-    :math:`\mathcal{O}(N^m)`, it can be as fast as
-    :math:`\mathcal{O}(m(N + |E|))`. See the references
-    for more details.
-
-    Parameters
-    ----------
-    n : int > 0
-        Number of nodes
-    m : int > 0
-        Hyperedge size
-    k : float > 0
-        Mean degree
-    epsilon : float > 0
-        Imbalance parameter
-    rho : float between 0 and 1, optional
-        The fraction of nodes in community 1, default 0.5
-    seed : integer or None (default)
-        The seed for the random number generator
-
-    Returns
-    -------
-    Hypergraph
-        The constructed m-HPPM hypergraph.
-
-    Raises
-    ------
-    XGIError
-        - If rho is not between 0 and 1
-        - If the mean degree is negative.
-        - If epsilon is not between 0 and 1
-
-    See Also
-    --------
-    uniform_HSBM
-
-    Notes
-    -----
-    Because XGI only stores edges as sets, when self-loops occur,
-    they become smaller edges (for example, the edge (0, 0, 0)
-    will be mapped to {0}). However, because this is explicitly
-    a *uniform* method, we discard these edges so that this is the case.
-    For sparse networks, this is a rare occurrence and this method offers
-    an order of magnitude speedup.
-
-    References
-    ----------
-    Nicholas W. Landry and Juan G. Restrepo,
-    "Opinion disparity in hypergraphs with community structure",
-    Phys. Rev. E **108**, 034311 (2024).
-    https://doi.org/10.1103/PhysRevE.108.034311
-    """
-
-    if rho < 0 or rho > 1:
-        raise xgi.XGIError("The value of rho must be between 0 and 1")
-    if k < 0:
-        raise xgi.XGIError("The mean degree must be non-negative")
-
-    sizes = [int(rho * n), n - int(rho * n)]
-
-    p = k / (m * n ** (m - 1))
-    # ratio of inter- to intra-community edges
-    q = rho**m + (1 - rho) ** m
-    r = 1 / q - 1
-    p_in = (1 + r * epsilon) * p
-    p_out = (1 - epsilon) * p
-
-    p = p_out * np.ones([2] * m)
-    p[tuple([0] * m)] = p_in
-    p[tuple([1] * m)] = p_in
-
-    return xgi.uniform_HSBM(n, m, p, sizes, seed=seed)
