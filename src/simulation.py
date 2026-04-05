@@ -1,6 +1,8 @@
+import random
+
 import networkx as nx
 import numpy as np
-import random
+
 
 def simple_network_model(P, T, dt):
     del_range = P["del"].copy()
