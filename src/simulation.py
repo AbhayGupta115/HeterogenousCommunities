@@ -5,7 +5,22 @@ import numpy as np
 
 
 def network_model_heterogeneity(P, T, dt):
+    """Function to simulate an ODE-based SIR model with heterogeneity in susceptibility and transmissibility. Assumes an Erdos-Renyi network, and that the distribution of susceptibility and transmissibility is given by P["G"].
 
+    Parameters
+    ----------
+    P : dict
+        A dictionary containing the parameters of the model, including the initial frequencies of susceptible, infected, and recovered individuals, the distribution of susceptibility and transmissibility, the transmission rate, the recovery rate, and the average degree of the network. Must also include "del" and "eps" keys for the ranges of susceptibility and transmissibility, respectively.
+    T : float
+        The total time for the simulation.
+    dt : float
+        The time step for the simulation.
+
+    Returns
+    -------
+    list
+        A list containing the time series with total frequency of susceptible, infected, and recovered individuals, as well as the time series of incident infections.
+    """
     del_range = P["del"].copy()
     eps_range = P["eps"].copy()
 
@@ -38,8 +53,6 @@ def network_model_heterogeneity(P, T, dt):
     for i in range(num_steps - 1):
         del_1 = np.sum(Y * I[i] * P["G"])
 
-        # del_ls.append([del_1, del_2])
-
         S[i + 1] = S[i] + dt * (-P["beta"] * X * S[i] * P["k"] * del_1)
         I[i + 1] = I[i] + dt * (
             -P["gamma"] * I[i] + P["beta"] * X * S[i] * P["k"] * del_1
@@ -56,7 +69,22 @@ def network_model_heterogeneity(P, T, dt):
 
 
 def network_model_communities(P, T, dt):
+    """Function to simulate an ODE-based SIR model with heterogeneity in susceptibility and transmissibility. Assumes a two community structure, and that the distribution of susceptibility and transmissibility is given for each community by P["G1"] and P["G2"].
 
+    Parameters
+    ----------
+    P : dict
+        A dictionary containing the parameters of the model, including the initial frequencies of susceptible, infected, and recovered individuals, the distribution of susceptibility and transmissibility for each community, the transmission rate, the recovery rate, and the average degree of the network. Must also include "del" and "eps" keys for the ranges of susceptibility and transmissibility, respectively.
+    T : float
+        The total time for the simulation.
+    dt : float
+        The time step for the simulation.
+
+    Returns
+    -------
+    list
+        A list containing the time series with total frequency of susceptible, infected, and recovered individuals in each community, as well as the time series of incident infections.
+    """
     del_range = np.linspace(0.1, 3, 100)  # Include in P later
     eps_range = np.linspace(0.1, 3, 100)  # Include in P later
 
@@ -162,6 +190,22 @@ def network_model_communities(P, T, dt):
 
 
 def network_SIR_homogeneous(P, T, dt):
+    """Function to simulate a simple SIR model on a network with community structure without any heterogeneity.
+
+    Parameters
+    ----------
+    P : dict
+        A dictionary containing the parameters of the model, including the initial frequencies of susceptible, infected, and recovered individuals. Must also include "beta", "gamma", "k", and "e" keys for the transmission rate, recovery rate, average degree of the network, and community structure parameter, respectively.
+    T : float
+        The total time for the simulation.
+    dt : float
+        The time step for the simulation.
+
+    Returns
+    -------
+    list
+        A list containing the time series with total frequency of susceptible, infected, and recovered individuals in each community, as well as the time series of incident infections.
+    """    
     t = np.arange(0.0, T + dt, dt, dtype=float)
     num_steps = len(t)
 
@@ -219,6 +263,25 @@ def network_SIR_homogeneous(P, T, dt):
 
 
 def basic_SIR(P, T, dt, R0):
+    """Function to simulate a basic SIR model in an Erdos-Renyi network assumption.
+
+    Parameters
+    ----------
+    P : dict
+        A dictionary containing the parameters of the model, including the initial frequencies of susceptible, infected, and recovered individuals. Must also include "beta", "gamma", "k", and "e" keys for the transmission rate, recovery rate, average degree of the network, and community structure parameter, respectively.
+    T : float
+        The total time for the simulation.
+    dt : float
+        The time step for the simulation.
+    R0 : float
+        The basic reproduction number.
+
+    Returns
+    -------
+    list
+        A list containing the time series with total frequency of susceptible, infected, and recovered individuals, as well as the time series of incident infections.
+    """
+       
     t = np.arange(0.0, T + dt, dt, dtype=float)
     num_steps = len(t)
 
