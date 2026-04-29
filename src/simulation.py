@@ -160,6 +160,7 @@ def network_model_communities(P, T, dt):
 
     return [S1_sum, I1_sum, R1_sum, S2_sum, I2_sum, R2_sum, del_ls, incident_inf]
 
+
 def network_SIR_homogeneous(P, T, dt):
     t = np.arange(0.0, T + dt, dt, dtype=float)
     num_steps = len(t)
@@ -185,12 +186,30 @@ def network_SIR_homogeneous(P, T, dt):
     incident_inf = np.empty((num_steps - 1, 2))
 
     for i in range(num_steps - 1):
-        S1[i + 1] = S1[i] + dt * (-beta * S1[i] * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i]))
-        I1[i + 1] = I1[i] + dt * (beta * S1[i] * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i]) - gamma * I1[i])
+        S1[i + 1] = S1[i] + dt * (
+            -beta
+            * S1[i]
+            * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i])
+        )
+        I1[i + 1] = I1[i] + dt * (
+            beta
+            * S1[i]
+            * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i])
+            - gamma * I1[i]
+        )
         R1[i + 1] = R1[i] + dt * (gamma * I1[i])
 
-        S2[i + 1] = S2[i] + dt * (-beta * S2[i] * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i]))
-        I2[i + 1] = I2[i] + dt * (beta * S2[i] * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i]) - gamma * I2[i])
+        S2[i + 1] = S2[i] + dt * (
+            -beta
+            * S2[i]
+            * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i])
+        )
+        I2[i + 1] = I2[i] + dt * (
+            beta
+            * S2[i]
+            * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i])
+            - gamma * I2[i]
+        )
         R2[i + 1] = R2[i] + dt * (gamma * I2[i])
 
         incident_inf[i, 0] = np.sum((S1[i + 1] - S1[i]) / dt)
