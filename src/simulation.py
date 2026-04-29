@@ -4,7 +4,8 @@ import networkx as nx
 import numpy as np
 
 
-def simple_network_model(P, T, dt):
+def network_model_heterogeneity(P, T, dt):
+
     del_range = P["del"].copy()
     eps_range = P["eps"].copy()
 
@@ -37,6 +38,8 @@ def simple_network_model(P, T, dt):
     for i in range(num_steps - 1):
         del_1 = np.sum(Y * I[i] * P["G"])
 
+        # del_ls.append([del_1, del_2])
+
         S[i + 1] = S[i] + dt * (-P["beta"] * X * S[i] * P["k"] * del_1)
         I[i + 1] = I[i] + dt * (
             -P["gamma"] * I[i] + P["beta"] * X * S[i] * P["k"] * del_1
@@ -52,7 +55,7 @@ def simple_network_model(P, T, dt):
     return [S_sum, I_sum, R_sum, incident_inf]
 
 
-def network_model_v2(P, T, dt):
+def network_model_communities(P, T, dt):
 
     del_range = np.linspace(0.1, 3, 100)  # Include in P later
     eps_range = np.linspace(0.1, 3, 100)  # Include in P later
@@ -156,6 +159,44 @@ def network_model_v2(P, T, dt):
         incident_inf[i, 1] = np.sum(P["g2"] * (S2[i + 1] - S2[i]) / dt)
 
     return [S1_sum, I1_sum, R1_sum, S2_sum, I2_sum, R2_sum, del_ls, incident_inf]
+
+def network_SIR_homogeneous(P, T, dt):
+    t = np.arange(0.0, T + dt, dt, dtype=float)
+    num_steps = len(t)
+
+    S1 = np.zeros(num_steps)
+    I1 = np.zeros(num_steps)
+    R1 = np.zeros(num_steps)
+    S2 = np.zeros(num_steps)
+    I2 = np.zeros(num_steps)
+    R2 = np.zeros(num_steps)
+
+    S1[0] = P["S1"]
+    I1[0] = P["I1"]
+    R1[0] = P["R1"]
+    S2[0] = P["S2"]
+    I2[0] = P["I2"]
+    R2[0] = P["R2"]
+
+    beta = P["beta"]
+    gamma = P["gamma"]
+    k = P["k"]
+
+    incident_inf = np.empty((num_steps - 1, 2))
+
+    for i in range(num_steps - 1):
+        S1[i + 1] = S1[i] + dt * (-beta * S1[i] * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i]))
+        I1[i + 1] = I1[i] + dt * (beta * S1[i] * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i]) - gamma * I1[i])
+        R1[i + 1] = R1[i] + dt * (gamma * I1[i])
+
+        S2[i + 1] = S2[i] + dt * (-beta * S2[i] * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i]))
+        I2[i + 1] = I2[i] + dt * (beta * S2[i] * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i]) - gamma * I2[i])
+        R2[i + 1] = R2[i] + dt * (gamma * I2[i])
+
+        incident_inf[i, 0] = np.sum((S1[i + 1] - S1[i]) / dt)
+        incident_inf[i, 1] = np.sum((S2[i + 1] - S2[i]) / dt)
+
+    return [S1, I1, R1, S2, I2, R2, incident_inf]
 
 
 def basic_SIR(P, T, dt, R0):
