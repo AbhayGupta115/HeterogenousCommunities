@@ -6,9 +6,9 @@ from scipy.stats import multivariate_normal
 
 
 def create_comm(rho, me=1.5, md=1.5, vare=1, vard=1, samplesize=None):
-    """Function used to create the joint distribution of susceptibility 
-    and transmissibility, given a correlation coefficient and other parameters. 
-    The distribution is normalized to sum to 1, and can also return samples from 
+    """Function used to create the joint distribution of susceptibility
+    and transmissibility, given a correlation coefficient and other parameters.
+    The distribution is normalized to sum to 1, and can also return samples from
     the distribution if a sample size is provided.
 
     Parameters
@@ -32,7 +32,7 @@ def create_comm(rho, me=1.5, md=1.5, vare=1, vard=1, samplesize=None):
         The joint distribution of susceptibility and transmissibility, normalized to sum to 1.
     np.ndarray, optional
         If samplesize is provided, returns a tuple of the joint distribution and the samples drawn from the distribution.
-    """    
+    """
     x = np.linspace(0.1, 3, 100)
     y = np.linspace(0.1, 3, 100)
 
@@ -77,7 +77,7 @@ def plot_comm(joint_dist, x, y):
         The x-axis values for the plot.
     y : np.ndarray
         The y-axis values for the plot.
-    """    
+    """
     ax = sns.heatmap(joint_dist, xticklabels=9, yticklabels=9)
     ax.set(xlabel="susceptibility", ylabel="transmisibility")
     ax.set_xticklabels(np.round([x[i] for i in range(0, 100, 9)], 2), rotation=90)
