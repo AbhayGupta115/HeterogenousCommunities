@@ -107,7 +107,4 @@ All correspondence should be directed to [Abhay Gupta](abhay.gupta@virginia.edu)
 This project is licensed under the [MIT License](LICENSE.md) Creative Commons License - see the [LICENSE](LICENSE.md) file for details.
 
 ## Acknowledgments
-
-- **Billie Thompson** - *Provided original README* - [PurpleBooth](https://github.com/PurpleBooth)
-- **George Datseris** - *Published workshop on scientific code; inspired organization for reproducibility* - [GoodScientificCodeWorkshop](https://github.com/JuliaDynamics/GoodScientificCodeWorkshop)
-- **Nicolò Ruggeri** - *Inspired shield use in README* - [Nicolò Ruggeri's GitHub](https://github.com/nickruggeri)
+- We thank **Daniel Kaise** for copying the readme template from **Bllie Thompson** and providing it to us.
