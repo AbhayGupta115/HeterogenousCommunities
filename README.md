@@ -1,5 +1,5 @@
 <h1 align="center">
-Heterogeneous communities simulations <br/>  
+The interplay of network structure and individual infectious traits in epidemic models <br/>  
 </h1>
 
 <p align="center">
@@ -26,9 +26,9 @@ Research project exploring the effect of heterogeneous node susceptibility and t
 
 The repository contains the original scientific analyses developed by the Authors (see below) for the paper
 
-- **(In preparation)** LastName, FirstName. Year. [Paper title](arxiv.org).
+- A. Gupta, N.W. Landry. 2026. [The interplay of network structure and individual infectious traits in epidemic models](arxiv.org).
 
-If you use this repository in any fashion in your own work, please cite our work according to the `CITATION.cff`.
+If you use this repository in any fashion in your own work, please cite our work.
 
 # Contents
 
@@ -64,7 +64,7 @@ To (locally) reproduce this project, do the following:
 1. Clone this repository. 
 2. Create a virtual environment with the necessary packages. We provide a `environment.yml` file for this purpose.
 
-This will install all necessary packages and place them into a virtual environment.
+This will install all necessary packages and place them into a virtual environment named `SIRS`.
 
 
 # Usage
@@ -77,24 +77,6 @@ Each notebook also contains the code to produce the data for numerical simulatio
 
 
 # Other Information
-
-## Built With
-
-### Repository and Version Control
-
-- [ChooseALicense](https://choosealicense.com/) - Used to choose the license.
-- [Commitizen](https://commitizen-tools.github.io/commitizen/) - Used to maintain Conventional Commit standard.
-
-### Source code
-
-- []()
-
-### Research analysis
-
-- [Snakemake]() - Used for organizing and running research pipeline.
-- [Quarto]() - Used for writing analyses documents.
-
-
 ## Authors
 
 All correspondence should be directed to [Abhay Gupta](abhay.gupta@virginia.edu).
@@ -104,7 +86,7 @@ All correspondence should be directed to [Abhay Gupta](abhay.gupta@virginia.edu)
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE.md) Creative Commons License - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the [BSD 3-Clause License](LICENSE.md) - see the [LICENSE](LICENSE.md) file for details.
 
 ## Acknowledgments
 - We thank **Daniel Kaise** for copying the readme template from **Bllie Thompson** and providing it to us.
