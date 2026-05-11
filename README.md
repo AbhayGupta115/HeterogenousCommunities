@@ -5,12 +5,12 @@ Heterogeneous communities simulations <br/>
 <p align="center">
 <i>Both mean-field and numerical simulation (using EoN) for a planted partition network model with heterogeneous node susceptibility and transmissibility,</i>
 </p>
-<!---
+
 <p align="center">
-<a href="https://github.com/nickruggeri/Hy-MMSBM/blob/main/LICENSE" target="_blank">
+
+<a href="https://github.com/AbhayGupta115/HeterogenousCommunities/blob/main/LICENSE.md" target="_blank">
 <img alt="License: MIT" src="https://img.shields.io/github/license/kaiser-dan/REPO">
 </a>
---->
 
 <a href="https://www.python.org/" target="_blank">
 <img alt="Made with Python" src="https://img.shields.io/badge/made%20with-python-1f425f.svg">

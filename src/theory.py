@@ -3,16 +3,16 @@ import numpy as np
 
 
 def BC_r0(a, b, beta, gamma, k, e):
-    """Function to calculate R0 for a population with two 
+    """Function to calculate R0 for a population with two
     balanced communities, given the parameters of the model.
 
     Parameters
     ----------
     a : float
-        The weighted covariance of susceptibility and 
+        The weighted covariance of susceptibility and
         transmissibility for the first community.
     b : float
-        The weighted covariance of susceptibility and 
+        The weighted covariance of susceptibility and
         transmissibility for the second community.
     beta : float
         The transmission rate.
@@ -34,16 +34,16 @@ def BC_r0(a, b, beta, gamma, k, e):
 
 
 def BC_beta(a, b, R0, gamma, k, e):
-    """Function to calculate the transmission rate for a population 
+    """Function to calculate the transmission rate for a population
     with two balanced communities, given the parameters of the model.
 
     Parameters
     ----------
     a : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the first community.
     b : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the second community.
     R0 : float
         The basic reproduction number.
@@ -65,16 +65,16 @@ def BC_beta(a, b, R0, gamma, k, e):
 
 
 def IBC_r0(a, b, beta, gamma, k, e, r):
-    """Function to calculate R0 for a population with 
+    """Function to calculate R0 for a population with
     two imbalanced communities, given the parameters of the model.
 
     Parameters
     ----------
     a : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the first community.
     b : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the second community.
     beta : float
         The transmission rate.
@@ -101,16 +101,16 @@ def IBC_r0(a, b, beta, gamma, k, e, r):
 
 
 def IBC_beta(a, b, R0, gamma, k, e, r):
-    """Function to calculate the transmission rate 
+    """Function to calculate the transmission rate
     for a population with two imbalanced comunities.
 
     Parameters
     ----------
     a : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the first community.
     b : float
-        The weighted covariance of susceptibility 
+        The weighted covariance of susceptibility
         and transmissibility for the second community.
     R0 : float
         The basic reproduction number.
