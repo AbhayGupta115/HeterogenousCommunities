@@ -39,11 +39,8 @@ If you use this repository in any fashion in your own work, please cite our work
 - [Usage](#usage)
   - [Reproducing experiments](#reproducing-experiments)
 - [Other Information](#other-information)
-  - [Built With](#built-with)
-  - [Versioning](#versioning)
   - [Authors](#authors)
   - [License](#license)
-  - [Acknowledgments](#acknowledgments)
 
 # Getting Started
 
@@ -87,6 +84,3 @@ All correspondence should be directed to [Abhay Gupta](abhay.gupta@virginia.edu)
 ## License
 
 This project is licensed under the [BSD 3-Clause License](LICENSE.md) - see the [LICENSE](LICENSE.md) file for details.
-
-## Acknowledgments
-- We thank **Daniel Kaise** for copying the readme template from **Bllie Thompson** and providing it to us.
