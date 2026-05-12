@@ -1,5 +1,5 @@
 <h1 align="center">
-The interplay of network structure and individual infectious traits in epidemic models <br/>  
+The interplay of network structure and correlated infectious traits in epidemic models <br/>  
 </h1>
 
 <p align="center">
