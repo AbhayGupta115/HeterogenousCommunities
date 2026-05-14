@@ -26,7 +26,7 @@ Research project exploring the effect of heterogeneous node susceptibility and t
 
 The repository contains the original scientific analyses developed by the Authors (see below) for the paper
 
-- A. Gupta, N.W. Landry. 2026. [The interplay of network structure and individual infectious traits in epidemic models](https://arxiv.org/abs/2605.12773).
+- A. Gupta, N.W. Landry. 2026. [The interplay of network structure and correlated infectious traits in epidemic models](https://arxiv.org/abs/2605.12773).
 
 If you use this repository in any fashion in your own work, please cite our work.
 
