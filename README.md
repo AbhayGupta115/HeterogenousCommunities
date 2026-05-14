@@ -1,5 +1,5 @@
 <h1 align="center">
-The interplay of network structure and correlated infectious traits in epidemic models <br/>  
+The interplay of network structure and correlated infectious traits in epidemic models <br/>
 </h1>
 
 <p align="center">
@@ -9,15 +9,15 @@ The interplay of network structure and correlated infectious traits in epidemic 
 <p align="center">
 
 <a href="https://github.com/AbhayGupta115/HeterogenousCommunities/blob/main/LICENSE.md" target="_blank">
-<img alt="License: MIT" src="https://img.shields.io/github/license/kaiser-dan/REPO">
+<img alt="License: BSD" src="https://img.shields.io/github/license/AbhayGupta115/HeterogenousCommunities">
 </a>
 
 <a href="https://www.python.org/" target="_blank">
 <img alt="Made with Python" src="https://img.shields.io/badge/made%20with-python-1f425f.svg">
 </a>
 
-<a href="https://arxiv.org/abs/ARXIVID" target="_blank">
-<img alt="ARXIV: ARXIVID" src="https://img.shields.io/badge/arXiv-ARXIVID-red.svg">
+<a href="https://arxiv.org/abs/2605.12773" target="_blank">
+<img alt="ARXIV: 2605.12773" src="https://img.shields.io/badge/arXiv-2605.12773-red.svg">
 </a>
 
 </p>
@@ -26,7 +26,7 @@ Research project exploring the effect of heterogeneous node susceptibility and t
 
 The repository contains the original scientific analyses developed by the Authors (see below) for the paper
 
-- A. Gupta, N.W. Landry. 2026. [The interplay of network structure and individual infectious traits in epidemic models](arxiv.org).
+- A. Gupta, N.W. Landry. 2026. [The interplay of network structure and individual infectious traits in epidemic models](https://arxiv.org/abs/2605.12773).
 
 If you use this repository in any fashion in your own work, please cite our work.
 
