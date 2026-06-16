@@ -157,8 +157,8 @@ def network_model_communities(P, T, dt):
             * X
             * S1[i]
             * (
-                ((P["k"] * (1 + P["e"])) / 2) * del_1
-                + ((P["k"] * (1 - P["e"])) / 2) * del_2
+                ((P["k"] * (1 + P["s"])) / 2) * del_1
+                + ((P["k"] * (1 - P["s"])) / 2) * del_2
             )
         )
         I1[i + 1] = I1[i] + dt * (
@@ -167,8 +167,8 @@ def network_model_communities(P, T, dt):
             * X
             * S1[i]
             * (
-                ((P["k"] * (1 + P["e"])) / 2) * del_1
-                + ((P["k"] * (1 - P["e"])) / 2) * del_2
+                ((P["k"] * (1 + P["s"])) / 2) * del_1
+                + ((P["k"] * (1 - P["s"])) / 2) * del_2
             )
         )
         R1[i + 1] = R1[i] + dt * (P["gamma"] * I1[i])
@@ -178,8 +178,8 @@ def network_model_communities(P, T, dt):
             * X
             * S2[i]
             * (
-                ((P["k"] * (1 + P["e"])) / 2) * del_2
-                + ((P["k"] * (1 - P["e"])) / 2) * del_1
+                ((P["k"] * (1 + P["s"])) / 2) * del_2
+                + ((P["k"] * (1 - P["s"])) / 2) * del_1
             )
         )
         I2[i + 1] = I2[i] + dt * (
@@ -188,8 +188,8 @@ def network_model_communities(P, T, dt):
             * X
             * S2[i]
             * (
-                ((P["k"] * (1 + P["e"])) / 2) * del_2
-                + ((P["k"] * (1 - P["e"])) / 2) * del_1
+                ((P["k"] * (1 + P["s"])) / 2) * del_2
+                + ((P["k"] * (1 - P["s"])) / 2) * del_1
             )
         )
         R2[i + 1] = R2[i] + dt * (P["gamma"] * I2[i])
@@ -259,12 +259,12 @@ def network_SIR_homogeneous(P, T, dt):
         S1[i + 1] = S1[i] + dt * (
             -beta
             * S1[i]
-            * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i])
+            * (((k * (1 + P["s"])) / 2) * I1[i] + ((k * (1 - P["s"])) / 2) * I2[i])
         )
         I1[i + 1] = I1[i] + dt * (
             beta
             * S1[i]
-            * (((k * (1 + P["e"])) / 2) * I1[i] + ((k * (1 - P["e"])) / 2) * I2[i])
+            * (((k * (1 + P["s"])) / 2) * I1[i] + ((k * (1 - P["s"])) / 2) * I2[i])
             - gamma * I1[i]
         )
         R1[i + 1] = R1[i] + dt * (gamma * I1[i])
@@ -272,12 +272,12 @@ def network_SIR_homogeneous(P, T, dt):
         S2[i + 1] = S2[i] + dt * (
             -beta
             * S2[i]
-            * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i])
+            * (((k * (1 + P["s"])) / 2) * I2[i] + ((k * (1 - P["s"])) / 2) * I1[i])
         )
         I2[i + 1] = I2[i] + dt * (
             beta
             * S2[i]
-            * (((k * (1 + P["e"])) / 2) * I2[i] + ((k * (1 - P["e"])) / 2) * I1[i])
+            * (((k * (1 + P["s"])) / 2) * I2[i] + ((k * (1 - P["s"])) / 2) * I1[i])
             - gamma * I2[i]
         )
         R2[i + 1] = R2[i] + dt * (gamma * I2[i])
